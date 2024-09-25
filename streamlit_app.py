@@ -29,6 +29,12 @@ def save_campaigns(campaigns):
     with open('campaigns.json', 'w') as f:
         json.dump(campaigns, f, ensure_ascii=False, indent=4)
 
+# حساب الفرق بين تاريخ اليوم والتاريخ المحدد
+def calculate_days_left(account_date):
+    today = datetime.today().date()
+    account_date = pd.to_datetime(account_date).date()
+    return (account_date - today).days
+
 # إعداد البيانات
 accounts = load_accounts()
 campaigns = load_campaigns()
@@ -113,6 +119,15 @@ elif page == "عرض الحملات":
     selected_account = st.selectbox("اختر حسابًا", list(campaigns.keys()))
 
     if selected_account in campaigns and campaigns[selected_account]:
+        # حساب حالة الحساب بناءً على الفارق بين التاريخ المحدد واليوم الحالي
+        days_left = calculate_days_left(accounts[selected_account]["date"])
+        if days_left > 0:
+            st.info(f"حساب {selected_account}: باقي {days_left} يوم/أيام حتى تاريخ الدفع.")
+        elif days_left == 0:
+            st.warning(f"حساب {selected_account}: اليوم هو آخر يوم لتاريخ الدفع.")
+        else:
+            st.error(f"حساب {selected_account}: لقد تجاوزت تاريخ الدفع منذ {-days_left} يوم/أيام.")
+
         df = pd.DataFrame(campaigns[selected_account])
 
         # حذف العمود الأول (ID)
