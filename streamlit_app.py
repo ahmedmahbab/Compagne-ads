@@ -34,7 +34,14 @@ max_date = st.date_input("أدخل التاريخ المحدد للحساب", va
 # زر لإضافة الحساب أو تعديله
 if st.button("إضافة/تعديل الحساب"):
     if account_name:
-        accounts[account_name] = {"max_amount": max_amount, "max_date": str(max_date), "current_amount": 0, "campaigns": []}
+        if account_name not in accounts:
+            # إضافة حساب جديد
+            accounts[account_name] = {"max_amount": max_amount, "max_date": str(max_date), "current_amount": 0, "campaigns": [], "next_campaign_id": 1}
+        else:
+            # تعديل حساب موجود
+            accounts[account_name]["max_amount"] = max_amount
+            accounts[account_name]["max_date"] = str(max_date)
+        
         save_accounts(accounts)  # حفظ الحسابات بعد التعديل
         st.success(f"تم إضافة أو تعديل الحساب: {account_name}")
     else:
@@ -57,17 +64,21 @@ if accounts:
         if selected_account in accounts:
             # تحديث المبلغ الحالي للحساب وإضافة الحملة
             accounts[selected_account]["current_amount"] += campaign_amount
+            campaign_id = accounts[selected_account]["next_campaign_id"]  # الرقم التسلسلي للحملة
             campaign = {
+                "id": campaign_id,
                 "amount": campaign_amount,
                 "days": days,
                 "start_date": str(start_date),
                 "end_date": str(end_date)
             }
             accounts[selected_account]["campaigns"].append(campaign)
+            accounts[selected_account]["next_campaign_id"] += 1  # تحديث الرقم التسلسلي للحملة التالية
             save_accounts(accounts)  # حفظ الحسابات والحملات بعد التعديل
 
             # عرض تفاصيل الحملة
             st.markdown("<h3>تفاصيل الحملة:</h3>", unsafe_allow_html=True)
+            st.write(f"رقم الحملة: {campaign_id}")
             st.write(f"الحساب: {selected_account}")
             st.write(f"المبلغ: {campaign_amount} DZD")
             st.write(f"عدد الأيام: {days} يوم")
@@ -96,3 +107,16 @@ if accounts:
                 st.success("✅ الحملة تم تسجيلها بنجاح.")
 else:
     st.error("يرجى إضافة حساب أولاً قبل تسجيل حملة.")
+
+# --- عرض جميع الحملات لحساب محدد ---
+st.markdown("<h2 style='text-align: center;'>عرض الحملات</h2>", unsafe_allow_html=True)
+
+if accounts:
+    selected_account_for_view = st.selectbox("اختر حساب لعرض الحملات", options=accounts.keys())
+
+    if selected_account_for_view in accounts and accounts[selected_account_for_view]["campaigns"]:
+        st.markdown("<h3>الحملات المسجلة:</h3>", unsafe_allow_html=True)
+        for campaign in accounts[selected_account_for_view]["campaigns"]:
+            st.write(f"🔹 رقم الحملة: {campaign['id']} | المبلغ: {campaign['amount']} DZD | تاريخ البداية: {campaign['start_date']} | تاريخ النهاية: {campaign['end_date']}")
+    else:
+        st.write("لا توجد حملات مسجلة لهذا الحساب.")
