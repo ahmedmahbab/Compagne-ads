@@ -1,19 +1,3 @@
-# تحميل الحسابات من ملف JSON
-try:
-    with open('accounts.json', 'r') as f:
-        accounts = json.load(f)
-except FileNotFoundError:
-    accounts = {}
-except json.JSONDecodeError:
-    accounts = {}
-
-st.write("الحسابات المحملة:", accounts)  # هذا سيساعدك على رؤية المحتوى
-if "next_campaign_id" not in accounts[account_name]:
-    accounts[account_name]["next_campaign_id"] = 1  # تعيين القيمة الافتراضية
-selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()))
-
-if selected_account not in accounts:
-    st.error("الحساب المحدد غير موجود.")
 import json
 import streamlit as st
 
@@ -29,12 +13,17 @@ selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()))
 
 # تحقق من وجود الحساب
 if selected_account in accounts:
+    # تعيين القيمة الافتراضية للرقم التسلسلي
     if "next_campaign_id" not in accounts[selected_account]:
         accounts[selected_account]["next_campaign_id"] = 1
 
+    # تأكد من وجود مفتاح الحملات في الحساب
+    if "campaigns" not in accounts[selected_account]:
+        accounts[selected_account]["campaigns"] = []
+
     # إدخال بيانات الحملة
     campaign_amount = st.number_input("أدخل المبلغ للحملة")
-    campaign_days = st.number_input("عدد الأيام")
+    campaign_days = st.number_input("عدد الأيام", min_value=1)  # حد أدنى لعدد الأيام
     campaign_account_name = selected_account
     start_date = st.date_input("تاريخ بداية الحملة")
     end_date = st.date_input("تاريخ نهاية الحملة")
