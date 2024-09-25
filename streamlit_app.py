@@ -46,12 +46,12 @@ if page == "إدارة الحسابات":
     # إضافة حساب جديد
     st.subheader("إضافة حساب جديد")
     new_account_name = st.text_input("اسم الحساب الجديد")
-    new_limit = st.number_input("المبلغ المحدد", min_value=0)
+    new_limit = st.number_input("المبلغ المحدد", min_value=0.0, format="%.2f")
     new_date = st.date_input("التاريخ المحدد")
 
     if st.button("تأكيد إضافة الحساب"):
         if new_account_name and new_account_name not in accounts:
-            accounts[new_account_name] = {"next_campaign_id": 1, "limit": new_limit, "date": str(new_date), "campaigns": []}
+            accounts[new_account_name] = {"next_campaign_id": 1, "limit": round(new_limit, 2), "date": str(new_date), "campaigns": []}
             save_accounts(accounts)
             st.success(f"تم إضافة الحساب {new_account_name} بنجاح!")
         else:
@@ -65,11 +65,11 @@ if page == "إدارة الحسابات":
         st.write(f"تعديل الحساب: {selected_account}")
         
         # تعديل المبلغ المحدد والتاريخ
-        updated_limit = st.number_input("تعديل المبلغ المحدد", min_value=0, value=accounts[selected_account]["limit"])
+        updated_limit = st.number_input("تعديل المبلغ المحدد", min_value=0.0, value=accounts[selected_account]["limit"], format="%.2f")
         updated_date = st.date_input("تعديل التاريخ المحدد", value=pd.to_datetime(accounts[selected_account]["date"]))
         
         if st.button("تأكيد تعديل الحساب"):
-            accounts[selected_account]["limit"] = updated_limit
+            accounts[selected_account]["limit"] = round(updated_limit, 2)
             accounts[selected_account]["date"] = str(updated_date)
             save_accounts(accounts)
             st.success(f"تم تعديل الحساب {selected_account} بنجاح!")
@@ -84,19 +84,19 @@ elif page == "إضافة حملة":
         # إضافة خانة لاسم الزبون
         customer_name = st.text_input("اسم الزبون")
         
-        campaign_amount = st.number_input("المبلغ للحملة")
+        campaign_amount = st.number_input("المبلغ للحملة", min_value=0.0, format="%.2f")
         campaign_days = st.number_input("عدد الأيام", min_value=1)
         start_date = st.date_input("تاريخ بداية الحملة", value=datetime.today())
         end_date = start_date + timedelta(days=campaign_days)  # تاريخ نهاية الحملة
-        st.write("تاريخ نهاية الحملة:", end_date)
+        st.write(f"تاريخ نهاية الحملة: {end_date}")
 
         if st.button("تسجيل الحملة"):
             campaign_id = accounts[selected_account]["next_campaign_id"]
             campaigns[selected_account] = campaigns.get(selected_account, [])
             campaigns[selected_account].append({
                 "id": campaign_id,
-                "customer_name": customer_name,  # إضافة اسم الزبون للحملة
-                "amount": campaign_amount,
+                "customer_name": customer_name,
+                "amount": round(campaign_amount, 2),
                 "days": campaign_days,
                 "start_date": str(start_date),
                 "end_date": str(end_date)
@@ -121,7 +121,9 @@ elif page == "عرض الحملات":
         # تسمية الأعمدة
         df.columns = ["اسم الزبون", "المبلغ", "عدد الأيام", "تاريخ البداية", "تاريخ النهاية"]
 
-        # عرض الجدول بتزيين إضافي
+        # تنسيق المبلغ وعرض الجدول بتزيين إضافي
+        df["المبلغ"] = df["المبلغ"].map(lambda x: f"{x:,.2f} د.ج")  # إضافة الفراغ للوحدة
+
         st.table(df.style.set_properties(**{
             'background-color': 'lightblue',
             'color': 'black',
