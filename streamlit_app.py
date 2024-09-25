@@ -36,51 +36,58 @@ campaigns = load_campaigns()
 # واجهة المستخدم
 st.title("إدارة الحملات")
 
-# قسم إضافة حساب
-st.header("إضافة حساب")
-account_name = st.text_input("اسم الحساب")
-if st.button("تأكيد إضافة الحساب"):
-    if account_name and account_name not in accounts:
-        accounts[account_name] = {"next_campaign_id": 1, "campaigns": []}
-        save_accounts(accounts)
-        st.success("تم إضافة الحساب بنجاح!")
-    else:
-        st.error("يرجى إدخال اسم حساب صحيح أو الحساب موجود بالفعل.")
+# جهة التنقل
+page = st.sidebar.radio("اختر صفحة:", ["إدارة الحسابات", "إضافة حملة", "عرض الحملات"])
 
-# عرض الحسابات
-st.header("الحسابات المتاحة")
-selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()))
+if page == "إدارة الحسابات":
+    # قسم إضافة حساب
+    st.header("إضافة حساب")
+    account_name = st.text_input("اسم الحساب")
+    if st.button("تأكيد إضافة الحساب"):
+        if account_name and account_name not in accounts:
+            accounts[account_name] = {"next_campaign_id": 1, "campaigns": []}
+            save_accounts(accounts)
+            st.success("تم إضافة الحساب بنجاح!")
+        else:
+            st.error("يرجى إدخال اسم حساب صحيح أو الحساب موجود بالفعل.")
 
-if selected_account:
-    st.write(f"حساب: {selected_account}")
-    
-    # إضافة حملة
+    # عرض الحسابات
+    st.header("الحسابات المتاحة")
+    selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()))
+
+elif page == "إضافة حملة":
     st.header("إضافة حملة")
-    campaign_amount = st.number_input("المبلغ للحملة")
-    campaign_days = st.number_input("عدد الأيام", min_value=1)
-    start_date = st.date_input("تاريخ بداية الحملة", value=datetime.today())
-    end_date = start_date + timedelta(days=campaign_days)  # تاريخ نهاية الحملة
-    st.write("تاريخ نهاية الحملة:", end_date)
+    selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()))
 
-    if st.button("تسجيل الحملة"):
-        campaign_id = accounts[selected_account]["next_campaign_id"]
-        campaigns[selected_account] = campaigns.get(selected_account, [])
-        campaigns[selected_account].append({
-            "id": campaign_id,
-            "amount": campaign_amount,
-            "days": campaign_days,
-            "start_date": str(start_date),
-            "end_date": str(end_date)
-        })
-        accounts[selected_account]["next_campaign_id"] += 1
-        save_accounts(accounts)
-        save_campaigns(campaigns)
-        st.success("تم تسجيل الحملة بنجاح!")
+    if selected_account:
+        campaign_amount = st.number_input("المبلغ للحملة")
+        campaign_days = st.number_input("عدد الأيام", min_value=1)
+        start_date = st.date_input("تاريخ بداية الحملة", value=datetime.today())
+        end_date = start_date + timedelta(days=campaign_days)  # تاريخ نهاية الحملة
+        st.write("تاريخ نهاية الحملة:", end_date)
 
-# عرض الحملات المسجلة
-st.header("الحملات المسجلة")
-if selected_account in campaigns and campaigns[selected_account]:
-    df = pd.DataFrame(campaigns[selected_account])
-    st.dataframe(df)
-else:
-    st.write("لا توجد حملات مسجلة.")
+        if st.button("تسجيل الحملة"):
+            campaign_id = accounts[selected_account]["next_campaign_id"]
+            campaigns[selected_account] = campaigns.get(selected_account, [])
+            campaigns[selected_account].append({
+                "id": campaign_id,
+                "amount": campaign_amount,
+                "days": campaign_days,
+                "start_date": str(start_date),
+                "end_date": str(end_date)
+            })
+            accounts[selected_account]["next_campaign_id"] += 1
+            save_accounts(accounts)
+            save_campaigns(campaigns)
+            st.success("تم تسجيل الحملة بنجاح!")
+
+elif page == "عرض الحملات":
+    st.header("الحملات المسجلة")
+    selected_account = st.selectbox("اختر حسابًا", list(campaigns.keys()))
+
+    if selected_account in campaigns and campaigns[selected_account]:
+        df = pd.DataFrame(campaigns[selected_account])
+        st.dataframe(df)
+    else:
+        st.write("لا توجد حملات مسجلة.")
+
