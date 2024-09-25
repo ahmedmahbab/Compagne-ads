@@ -2,6 +2,7 @@ import streamlit as st
 import json
 import pandas as pd
 from datetime import datetime, timedelta
+from io import StringIO
 
 # تحميل الحسابات من ملف JSON
 def load_accounts():
@@ -121,31 +122,22 @@ elif page == "عرض الحملات":
         # تسمية الأعمدة
         df.columns = ["اسم الزبون", "المبلغ", "عدد الأيام", "تاريخ البداية", "تاريخ النهاية"]
 
-        # إضافة أعمدة لتعديل وحذف الحملات
+        # توسيط كل الأعمدة
+        df_style = df.style.set_properties(**{'text-align': 'center'})
+
+        # عرض الجدول مع أزرار التعديل والحذف
+        st.table(df_style)
+
+        # إضافة أعمدة للتعديل والحذف
         for i, row in df.iterrows():
-            st.write(f"الحملة {i+1}")
-            col1, col2, col3, col4, col5 = st.columns(5)
-
+            col1, col2 = st.columns([1, 1])
             with col1:
-                st.write(row["اسم الزبون"])
-            with col2:
-                st.write(f"{row['المبلغ']} د.ج")
-            with col3:
-                st.write(row["عدد الأيام"])
-            with col4:
-                st.write(row["تاريخ البداية"])
-            with col5:
-                st.write(row["تاريخ النهاية"])
-
-            # أزرار التعديل والحذف
-            col6, col7 = st.columns([1, 1])
-            with col6:
-                if st.button(f"تعديل {i+1}", key=f"edit_{i}"):
+                if st.button(f"✏️ تعديل {i+1}", key=f"edit_{i}"):
                     st.write(f"تم تعديل الحملة {i+1}")
-                    # يمكنك إضافة المزيد من وظائف التعديل هنا
+                    # هنا يمكنك إضافة نافذة تعديل الحملة
 
-            with col7:
-                if st.button(f"حذف {i+1}", key=f"delete_{i}"):
+            with col2:
+                if st.button(f"🗑️ حذف {i+1}", key=f"delete_{i}"):
                     campaigns[selected_account].pop(i)
                     save_campaigns(campaigns)
                     st.success(f"تم حذف الحملة {i+1}")
