@@ -144,20 +144,5 @@ elif page == "عرض الحملات":
 
         # عرض الجدول
         st.write(df_style)
-
-        # إضافة أعمدة للتعديل والحذف
-        for i, row in df.iterrows():
-            col1, col2 = st.columns([1, 1])
-            with col1:
-                if st.button(f"✏️ تعديل {i+1}", key=f"edit_{i}"):
-                    st.write(f"تم تعديل الحملة {i+1}")
-                    # يمكنك إضافة نافذة تعديل الحملة
-
-            with col2:
-                if st.button(f"🗑️ حذف {i+1}", key=f"delete_{i}"):
-                    campaigns[selected_account].pop(i)
-                    save_campaigns(campaigns)
-                    st.success(f"تم حذف الحملة {i+1}")
-                    st.experimental_rerun()
     else:
         st.write("لا توجد حملات مسجلة.")
