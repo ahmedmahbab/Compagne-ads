@@ -1,6 +1,7 @@
 import json
 import streamlit as st
 import pandas as pd
+from datetime import timedelta
 
 # تحميل الحسابات من ملف JSON
 def load_accounts():
@@ -63,39 +64,45 @@ elif page == "إدارة الحملات":
     selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()))
 
     if selected_account in accounts:
-        # عرض الحملات
+        # عرض الحملات المسجلة
         st.write("الحملات المسجلة:")
         campaigns = accounts[selected_account]["campaigns"]
         
-        for campaign in campaigns:
-            with st.expander(f"حملة ID: {campaign['id']}"):
-                campaign_amount = st.number_input("المبلغ", value=campaign['amount'], key=f"amount_{campaign['id']}")
-                campaign_days = st.number_input("عدد الأيام", value=campaign['days'], key=f"days_{campaign['id']}")
-                start_date = st.date_input("تاريخ بداية الحملة", value=pd.to_datetime(campaign['start_date']).date(), key=f"start_{campaign['id']}")
-                end_date = st.date_input("تاريخ نهاية الحملة", value=pd.to_datetime(campaign['end_date']).date(), key=f"end_{campaign['id']}")
+        if campaigns:
+            for campaign in campaigns:
+                with st.expander(f"حملة ID: {campaign['id']}"):
+                    st.write(f"**المبلغ:** {campaign['amount']}")
+                    st.write(f"**عدد الأيام:** {campaign['days']}")
+                    st.write(f"**تاريخ بداية الحملة:** {pd.to_datetime(campaign['start_date']).date()}")
+                    end_date = pd.to_datetime(campaign['start_date']) + timedelta(days=campaign['days'])
+                    st.write(f"**تاريخ نهاية الحملة:** {end_date.date()}")
 
-                if st.button("تحديث الحملة", key=f"update_{campaign['id']}"):
-                    campaign['amount'] = campaign_amount
-                    campaign['days'] = campaign_days
-                    campaign['start_date'] = str(start_date)
-                    campaign['end_date'] = str(end_date)
+                    campaign_amount = st.number_input("المبلغ", value=campaign['amount'], key=f"amount_{campaign['id']}")
+                    campaign_days = st.number_input("عدد الأيام", value=campaign['days'], key=f"days_{campaign['id']}")
+                    start_date = st.date_input("تاريخ بداية الحملة", value=pd.to_datetime(campaign['start_date']).date(), key=f"start_{campaign['id']}")
 
-                    save_accounts(accounts)
+                    if st.button("تحديث الحملة", key=f"update_{campaign['id']}"):
+                        campaign['amount'] = campaign_amount
+                        campaign['days'] = campaign_days
+                        campaign['start_date'] = str(start_date)
 
-                    st.success("تم تحديث الحملة بنجاح!")
+                        save_accounts(accounts)
 
-                if st.button("حذف الحملة", key=f"delete_{campaign['id']}"):
-                    campaigns.remove(campaign)
-                    save_accounts(accounts)
-                    st.success("تم حذف الحملة بنجاح!")
-                    break  # للخروج من الحلقة بعد الحذف
+                        st.success("تم تحديث الحملة بنجاح!")
+
+                    if st.button("حذف الحملة", key=f"delete_{campaign['id']}"):
+                        campaigns.remove(campaign)
+                        save_accounts(accounts)
+                        st.success("تم حذف الحملة بنجاح!")
+                        break  # للخروج من الحلقة بعد الحذف
+        else:
+            st.write("لا توجد حملات مسجلة لهذا الحساب.")
 
         # إضافة حملة جديدة
         st.write("إضافة حملة جديدة")
         campaign_amount = st.number_input("أدخل المبلغ للحملة")
         campaign_days = st.number_input("عدد الأيام", min_value=1)
         start_date = st.date_input("تاريخ بداية الحملة")
-        end_date = st.date_input("تاريخ نهاية الحملة")
 
         if st.button("تسجيل الحملة"):
             campaign_id = accounts[selected_account]["next_campaign_id"]
@@ -104,7 +111,6 @@ elif page == "إدارة الحملات":
                 "amount": campaign_amount,
                 "days": campaign_days,
                 "start_date": str(start_date),
-                "end_date": str(end_date)
             })
             accounts[selected_account]["next_campaign_id"] += 1
 
