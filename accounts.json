@@ -1,11 +1,10 @@
 {
-    "حساب1": {
+    "حساب 1": {
         "next_campaign_id": 1,
         "campaigns": []
     },
-    "حساب2": {
+    "حساب 2": {
         "next_campaign_id": 1,
         "campaigns": []
     }
 }
-
