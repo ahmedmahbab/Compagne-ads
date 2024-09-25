@@ -22,12 +22,12 @@ def load_campaigns():
 # حفظ الحسابات إلى ملف JSON
 def save_accounts(accounts):
     with open('accounts.json', 'w') as f:
-        json.dump(accounts, f)
+        json.dump(accounts, f, ensure_ascii=False, indent=4)
 
 # حفظ الحملات إلى ملف JSON
 def save_campaigns(campaigns):
     with open('campaigns.json', 'w') as f:
-        json.dump(campaigns, f)
+        json.dump(campaigns, f, ensure_ascii=False, indent=4)
 
 # تحميل البيانات
 accounts = load_accounts()
@@ -63,12 +63,10 @@ if st.sidebar.button("إدارة الحسابات"):
             else:
                 st.error("يرجى إدخال اسم الحساب.")
     else:
+        st.write("تعديل الحساب:", selected_account)
         current_limit = accounts[selected_account].get("limit", 0)
         current_date = accounts[selected_account].get("date", "غير محدد")
         
-        st.write(f"المبلغ المحدد: {current_limit}")
-        st.write(f"تاريخ المحدد: {current_date}")
-
         new_limit = st.number_input("تعديل المبلغ المحدد", value=current_limit)
         new_date = st.date_input("تعديل التاريخ المحدد", value=pd.to_datetime(current_date))
 
@@ -78,7 +76,7 @@ if st.sidebar.button("إدارة الحسابات"):
             save_accounts(accounts)
             st.success("تم تحديث الحساب بنجاح!")
 
-# إدارة الحملات
+# إضافة حملة جديدة
 if st.sidebar.button("إضافة حملة"):
     st.header("إضافة حملة جديدة")
 
@@ -90,11 +88,9 @@ if st.sidebar.button("إضافة حملة"):
         start_date = st.date_input("تاريخ بداية الحملة")
         end_date = start_date + timedelta(days=campaign_days)
 
-        # تسجيل الحملة عند الضغط على الزر
         if st.button("تسجيل الحملة"):
             campaign_id = accounts[selected_account]["next_campaign_id"]
             
-            # إضافة الحملة إلى الحساب
             if selected_account not in campaigns:
                 campaigns[selected_account] = []
 
@@ -107,15 +103,14 @@ if st.sidebar.button("إضافة حملة"):
                 "end_date": str(end_date)
             })
 
-            # تحديث الرقم التسلسلي
             accounts[selected_account]["next_campaign_id"] += 1
             
-            # حفظ البيانات
             save_accounts(accounts)
             save_campaigns(campaigns)
 
             st.success("تم تسجيل الحملة بنجاح!")
 
+# إدارة الحملات
 if st.sidebar.button("إدارة الحملات"):
     st.header("إدارة الحملات")
 
