@@ -122,32 +122,37 @@ if st.sidebar.button("إدارة الحملات"):
     selected_account = st.selectbox("اختر حسابًا لإدارة الحملات", list(accounts.keys()))
 
     if selected_account in campaigns:
-        st.write("الحملات المسجلة:")
-        campaign_data = campaigns[selected_account]
+        if not campaigns[selected_account]:  # إذا لم يكن هناك حملات
+            st.write("لا توجد حملات مسجلة في هذا الحساب.")
+            if st.button("الرجوع إلى حساب آخر"):
+                st.experimental_rerun()  # إعادة تشغيل التطبيق لعرض الحسابات مرة أخرى
+        else:
+            st.write("الحملات المسجلة:")
+            campaign_data = campaigns[selected_account]
 
-        # تحويل البيانات إلى جدول
-        campaign_table = []
-        for campaign in campaign_data:
-            campaign_table.append([
-                campaign["id"],
-                campaign["start_date"],
-                campaign["end_date"],
-                campaign["amount"],
-                campaign["account_name"],
-                campaign["days"]
-            ])
+            # تحويل البيانات إلى جدول
+            campaign_table = []
+            for index, campaign in enumerate(campaign_data, start=1):
+                campaign_table.append([
+                    index,  # الرقم التسلسلي
+                    campaign["start_date"],
+                    campaign["end_date"],
+                    campaign["amount"],
+                    campaign["account_name"],
+                    campaign["days"]
+                ])
 
-        # عرض الجدول باستخدام Streamlit
-        st.table(campaign_table)
+            # عرض الجدول باستخدام Streamlit
+            st.table(campaign_table)
 
-        # حذف حملة
-        campaign_id_to_delete = st.number_input("أدخل رقم الحملة لحذفها", min_value=1)
-        if st.button("حذف الحملة"):
-            for campaign in campaigns[selected_account]:
-                if campaign["id"] == campaign_id_to_delete:
-                    campaigns[selected_account].remove(campaign)
-                    save_campaigns(campaigns)
-                    st.success("تم حذف الحملة بنجاح!")
-                    break
-            else:
-                st.error("رقم الحملة غير موجود.")
+            # حذف حملة
+            campaign_id_to_delete = st.number_input("أدخل رقم الحملة لحذفها", min_value=1)
+            if st.button("حذف الحملة"):
+                for campaign in campaigns[selected_account]:
+                    if campaign["id"] == campaign_id_to_delete:
+                        campaigns[selected_account].remove(campaign)
+                        save_campaigns(campaigns)
+                        st.success("تم حذف الحملة بنجاح!")
+                        break
+                else:
+                    st.error("رقم الحملة غير موجود.")
