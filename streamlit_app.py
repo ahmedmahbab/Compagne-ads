@@ -6,27 +6,27 @@ from datetime import datetime, timedelta
 # تحميل الحسابات من ملف JSON
 def load_accounts():
     try:
-        with open('accounts.json', 'r') as f:
+        with open('accounts.json', 'r', encoding='utf-8') as f:
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         return {}
 
 # حفظ الحسابات إلى ملف JSON
 def save_accounts(accounts):
-    with open('accounts.json', 'w') as f:
+    with open('accounts.json', 'w', encoding='utf-8') as f:
         json.dump(accounts, f, ensure_ascii=False, indent=4)
 
 # تحميل الحملات من ملف JSON
 def load_campaigns():
     try:
-        with open('campaigns.json', 'r') as f:
+        with open('campaigns.json', 'r', encoding='utf-8') as f:
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         return {}
 
 # حفظ الحملات إلى ملف JSON
 def save_campaigns(campaigns):
-    with open('campaigns.json', 'w') as f:
+    with open('campaigns.json', 'w', encoding='utf-8') as f:
         json.dump(campaigns, f, ensure_ascii=False, indent=4)
 
 # حساب الفرق بين تاريخ اليوم والتاريخ المحدد
