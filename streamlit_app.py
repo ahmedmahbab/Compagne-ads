@@ -125,6 +125,17 @@ if page == "عرض الحملات":
     if selected_account in campaigns and campaigns[selected_account]:
         # حساب حالة الحساب بناءً على الفارق بين التاريخ المحدد واليوم الحالي
         days_left = calculate_days_left(accounts[selected_account]["date"])
+        total_amount = sum(campaign["amount"] for campaign in campaigns[selected_account])
+        account_limit = accounts[selected_account]["limit"]
+        
+        # تنبيه لقرب وصول المبلغ أو التاريخ المحدد
+        if total_amount >= account_limit:
+            st.warning(f"حساب {selected_account}: المبلغ الإجمالي ({total_amount:,.2f} د.ج) بلغ أو تجاوز المبلغ المحدد للحساب ({account_limit:,.2f} د.ج).")
+            total_amount = 0  # تصفير المبلغ عند تجاوز الحد
+        elif days_left <= 2:
+            st.warning(f"حساب {selected_account}: تبقى {days_left} يوم/أيام للوصول إلى تاريخ الدفع المحدد ({accounts[selected_account]['date']}).")
+
+        # تنبيه لحالة الحساب بناءً على الفارق بين التاريخ واليوم
         if days_left > 0:
             st.info(f"حساب {selected_account}: باقي {days_left} يوم/أيام حتى تاريخ الدفع.")
         elif days_left == 0:
