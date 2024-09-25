@@ -117,7 +117,7 @@ elif page == "إضافة حملة":
             st.success("تم تسجيل الحملة بنجاح!")
 
 # صفحة عرض الحملات
-elif page == "عرض الحملات":
+if page == "عرض الحملات":
     st.header("الحملات المسجلة")
 
     selected_account = st.selectbox("اختر حسابًا", list(campaigns.keys()))
@@ -140,12 +140,16 @@ elif page == "عرض الحملات":
         # تسمية الأعمدة
         df.columns = ["اسم الزبون", "المبلغ", "عدد الأيام", "تاريخ البداية", "تاريخ النهاية"]
 
+        # تنسيق الأرقام لتكون برقمين بعد الفاصلة وإضافة فراغ بين الرقم والوحدة
+        df["المبلغ"] = df["المبلغ"].map(lambda x: f"{x:,.2f} د.ج")
+        df["عدد الأيام"] = df["عدد الأيام"].map(lambda x: f"{x} يوم")
+
         # تنسيق الألوان الهادئة وتوسيط الأعمدة
         df_style = df.style.set_properties(**{
+            'text-align': 'center',
             'background-color': '#f0f8ff',  # لون خلفية هادئ
             'color': 'black',
-            'border-color': 'white',
-            'text-align': 'center',
+            'border-color': 'white'
         }).set_table_styles([
             {
                 'selector': 'thead th',
