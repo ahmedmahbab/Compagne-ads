@@ -183,3 +183,4 @@ if page == "عرض الحملات":
         st.write(df_style)
     else:
         st.write("لا توجد حملات مسجلة.")
+
