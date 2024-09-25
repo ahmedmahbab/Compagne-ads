@@ -79,8 +79,11 @@ elif page == "إضافة حملة":
     st.header("إضافة حملة")
 
     selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()))
-
+    
     if selected_account:
+        # إضافة خانة لاسم الزبون
+        customer_name = st.text_input("اسم الزبون")
+        
         campaign_amount = st.number_input("المبلغ للحملة")
         campaign_days = st.number_input("عدد الأيام", min_value=1)
         start_date = st.date_input("تاريخ بداية الحملة", value=datetime.today())
@@ -92,6 +95,7 @@ elif page == "إضافة حملة":
             campaigns[selected_account] = campaigns.get(selected_account, [])
             campaigns[selected_account].append({
                 "id": campaign_id,
+                "customer_name": customer_name,  # إضافة اسم الزبون للحملة
                 "amount": campaign_amount,
                 "days": campaign_days,
                 "start_date": str(start_date),
