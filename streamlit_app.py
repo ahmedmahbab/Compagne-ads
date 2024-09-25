@@ -173,12 +173,14 @@ if page == "عرض الحملات":
                         new_end_date = st.date_input("تاريخ النهاية", value=pd.to_datetime(row["تاريخ النهاية"]))
 
                         if st.form_submit_button("حفظ التعديلات"):
+                            # تحديث الحملة في قائمة الحملات
                             campaigns[selected_account][i]["customer_name"] = new_customer_name
                             campaigns[selected_account][i]["amount"] = round(new_amount, 2)
                             campaigns[selected_account][i]["days"] = new_days
                             campaigns[selected_account][i]["start_date"] = str(new_start_date)
                             campaigns[selected_account][i]["end_date"] = str(new_end_date)
 
+                            # حفظ التعديلات في ملف JSON
                             save_campaigns(campaigns)
                             st.success(f"تم تعديل الحملة {i+1} بنجاح!")
                             st.experimental_rerun()  # إعادة تحميل الصفحة لتحديث البيانات
