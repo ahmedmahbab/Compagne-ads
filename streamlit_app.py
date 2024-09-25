@@ -126,25 +126,23 @@ elif page == "عرض الحملات":
             'text-align': 'center',
         })
 
-        # إضافة عمود لتعديل الحملة
-        df['تعديل'] = df.index.map(lambda x: st.button(f"تعديل {x+1}", key=f"edit_{x}"))
+        # عرض الجدول بتوسيط البيانات
+        st.write(df_style)
 
-        # إضافة عمود لحذف الحملة
-        df['حذف'] = df.index.map(lambda x: st.button(f"حذف {x+1}", key=f"delete_{x}"))
-
-        # عرض الجدول
-        st.table(df_style)
-
-        # تنفيذ التعديل والحذف
+        # إضافة عمود لتعديل وحذف الحملات
         for i, row in df.iterrows():
-            if row['تعديل']:
-                # من هنا يمكن إضافة نافذة تعديل الحملة حسب احتياجاتك
-                st.write(f"تعديل الحملة {i+1}")
+            col1, col2 = st.columns([1, 1])
+            with col1:
+                if st.button(f"تعديل الحملة {i+1}"):
+                    st.write(f"تم تعديل الحملة {i+1}")
+                    # يمكنك هنا إضافة نافذة تعديل الحملة
 
-            if row['حذف']:
-                campaigns[selected_account].pop(i)
-                save_campaigns(campaigns)
-                st.success(f"تم حذف الحملة {i+1}")
-                st.experimental_rerun()
+            with col2:
+                if st.button(f"حذف الحملة {i+1}"):
+                    campaigns[selected_account].pop(i)
+                    save_campaigns(campaigns)
+                    st.success(f"تم حذف الحملة {i+1}")
+                    st.experimental_rerun()
+
     else:
         st.write("لا توجد حملات مسجلة.")
