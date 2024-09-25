@@ -121,27 +121,30 @@ elif page == "عرض الحملات":
         # تسمية الأعمدة
         df.columns = ["اسم الزبون", "المبلغ", "عدد الأيام", "تاريخ البداية", "تاريخ النهاية"]
 
-        # تنسيق المبلغ وعرض الجدول بتزيين إضافي
-        df["المبلغ"] = df["المبلغ"].map(lambda x: f"{x:,.2f} د.ج")  # إضافة الفراغ للوحدة
-
-        st.table(df.style.set_properties(**{
-            'background-color': 'lightblue',
-            'color': 'black',
-            'border-color': 'white',
+        # توسيط جميع المعلومات
+        df_style = df.style.set_properties(**{
             'text-align': 'center',
-        }).set_table_styles([
-            {
-                'selector': 'thead th',
-                'props': [('background-color', 'darkblue'), ('color', 'white')]
-            },
-            {
-                'selector': 'tbody tr:nth-child(even)',
-                'props': [('background-color', '#f2f2f2')]
-            },
-            {
-                'selector': 'tbody tr:hover',
-                'props': [('background-color', '#d6e9f8')]
-            }
-        ]))
+        })
+
+        # إضافة عمود لتعديل الحملة
+        df['تعديل'] = df.index.map(lambda x: st.button(f"تعديل {x+1}", key=f"edit_{x}"))
+
+        # إضافة عمود لحذف الحملة
+        df['حذف'] = df.index.map(lambda x: st.button(f"حذف {x+1}", key=f"delete_{x}"))
+
+        # عرض الجدول
+        st.table(df_style)
+
+        # تنفيذ التعديل والحذف
+        for i, row in df.iterrows():
+            if row['تعديل']:
+                # من هنا يمكن إضافة نافذة تعديل الحملة حسب احتياجاتك
+                st.write(f"تعديل الحملة {i+1}")
+
+            if row['حذف']:
+                campaigns[selected_account].pop(i)
+                save_campaigns(campaigns)
+                st.success(f"تم حذف الحملة {i+1}")
+                st.experimental_rerun()
     else:
         st.write("لا توجد حملات مسجلة.")
