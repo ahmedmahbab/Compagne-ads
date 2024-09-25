@@ -95,3 +95,4 @@ else:
                 json.dump(accounts, f)
 
             st.success("تم تسجيل الحملة بنجاح!")
+            
