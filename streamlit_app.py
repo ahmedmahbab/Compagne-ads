@@ -2,7 +2,6 @@ import streamlit as st
 import json
 import pandas as pd
 from datetime import datetime, timedelta
-from io import StringIO
 
 # تحميل الحسابات من ملف JSON
 def load_accounts():
@@ -122,11 +121,29 @@ elif page == "عرض الحملات":
         # تسمية الأعمدة
         df.columns = ["اسم الزبون", "المبلغ", "عدد الأيام", "تاريخ البداية", "تاريخ النهاية"]
 
-        # توسيط كل الأعمدة
-        df_style = df.style.set_properties(**{'text-align': 'center'})
+        # تنسيق الألوان الهادئة وتوسيط الأعمدة
+        df_style = df.style.set_properties(**{
+            'background-color': '#f0f8ff',  # لون خلفية هادئ
+            'color': 'black',
+            'border-color': 'white',
+            'text-align': 'center',
+        }).set_table_styles([
+            {
+                'selector': 'thead th',
+                'props': [('background-color', '#b0c4de'), ('color', 'white')]  # خلفية هادئة لرأس الجدول
+            },
+            {
+                'selector': 'tbody tr:nth-child(even)',
+                'props': [('background-color', '#e6f2ff')]  # صفوف متناوبة
+            },
+            {
+                'selector': 'tbody tr:hover',
+                'props': [('background-color', '#dcdcdc')]  # تأثير عند التمرير
+            }
+        ])
 
-        # عرض الجدول مع أزرار التعديل والحذف
-        st.table(df_style)
+        # عرض الجدول
+        st.write(df_style)
 
         # إضافة أعمدة للتعديل والحذف
         for i, row in df.iterrows():
@@ -134,7 +151,7 @@ elif page == "عرض الحملات":
             with col1:
                 if st.button(f"✏️ تعديل {i+1}", key=f"edit_{i}"):
                     st.write(f"تم تعديل الحملة {i+1}")
-                    # هنا يمكنك إضافة نافذة تعديل الحملة
+                    # يمكنك إضافة نافذة تعديل الحملة
 
             with col2:
                 if st.button(f"🗑️ حذف {i+1}", key=f"delete_{i}"):
