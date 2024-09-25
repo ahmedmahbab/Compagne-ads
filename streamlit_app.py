@@ -40,8 +40,9 @@ st.title("إدارة الحملات")
 page = st.sidebar.radio("اختر صفحة:", ["إدارة الحسابات", "إضافة حملة", "عرض الحملات"])
 
 if page == "إدارة الحسابات":
-    # قسم إضافة حساب
-    st.header("إضافة حساب")
+    st.header("إدارة الحسابات")
+
+    # إضافة حساب
     account_name = st.text_input("اسم الحساب")
     if st.button("تأكيد إضافة الحساب"):
         if account_name and account_name not in accounts:
@@ -51,9 +52,22 @@ if page == "إدارة الحسابات":
         else:
             st.error("يرجى إدخال اسم حساب صحيح أو الحساب موجود بالفعل.")
 
-    # عرض الحسابات
-    st.header("الحسابات المتاحة")
-    selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()))
+    # تعديل الحسابات
+    st.header("تعديل حسابات موجودة")
+    selected_account = st.selectbox("اختر حسابًا للتعديل", list(accounts.keys()))
+
+    if selected_account:
+        # عرض تفاصيل الحساب
+        st.write(f"حساب: {selected_account}")
+        next_campaign_id = accounts[selected_account]["next_campaign_id"]
+        st.write(f"رقم الحملة التالية: {next_campaign_id}")
+
+        # تعديل تفاصيل الحساب
+        new_amount = st.number_input("المبلغ المحدد للحساب", min_value=0, value=next_campaign_id)
+        if st.button("تعديل المبلغ المحدد"):
+            accounts[selected_account]["next_campaign_id"] = new_amount
+            save_accounts(accounts)
+            st.success("تم تعديل المبلغ المحدد بنجاح!")
 
 elif page == "إضافة حملة":
     st.header("إضافة حملة")
@@ -90,4 +104,3 @@ elif page == "عرض الحملات":
         st.dataframe(df)
     else:
         st.write("لا توجد حملات مسجلة.")
-
