@@ -1,10 +1,14 @@
 {
     "حساب 1": {
         "next_campaign_id": 1,
-        "campaigns": []
+        "campaigns": [],
+        "limit": 00,
+        "date": "2024-09-30"
     },
     "حساب 2": {
         "next_campaign_id": 1,
-        "campaigns": []
+        "campaigns": [],
+        "limit": 80,
+        "date": "2024-10-01"
     }
 }
