@@ -79,10 +79,10 @@ if st.sidebar.button("الحسابات"):
             st.success("تم تحديث الحساب بنجاح!")
 
 # إدارة الحملات
-if st.sidebar.button("إدارة الحملات"):
-    st.header("إدارة الحملات")
+if st.sidebar.button("إضافة حملة"):
+    st.header("إضافة حملة جديدة")
 
-    selected_account = st.selectbox("اختر حسابًا لإدارة الحملات", list(accounts.keys()))
+    selected_account = st.selectbox("اختر حسابًا لإضافة حملة", list(accounts.keys()))
 
     if selected_account:
         campaign_amount = st.number_input("أدخل المبلغ للحملة")
@@ -116,34 +116,38 @@ if st.sidebar.button("إدارة الحملات"):
 
             st.success("تم تسجيل الحملة بنجاح!")
 
-        # عرض الحملات المسجلة
-        if selected_account in campaigns:
-            st.write("الحملات المسجلة:")
-            campaign_data = campaigns[selected_account]
+if st.sidebar.button("إدارة الحملات"):
+    st.header("إدارة الحملات")
 
-            # تحويل البيانات إلى جدول
-            campaign_table = []
-            for campaign in campaign_data:
-                campaign_table.append([
-                    campaign["id"],
-                    campaign["start_date"],
-                    campaign["end_date"],
-                    campaign["amount"],
-                    campaign["account_name"],
-                    campaign["days"]
-                ])
+    selected_account = st.selectbox("اختر حسابًا لإدارة الحملات", list(accounts.keys()))
 
-            # عرض الجدول باستخدام Streamlit
-            st.table(campaign_table)
+    if selected_account in campaigns:
+        st.write("الحملات المسجلة:")
+        campaign_data = campaigns[selected_account]
 
-            # حذف حملة
-            campaign_id_to_delete = st.number_input("أدخل رقم الحملة لحذفها", min_value=1)
-            if st.button("حذف الحملة"):
-                for campaign in campaigns[selected_account]:
-                    if campaign["id"] == campaign_id_to_delete:
-                        campaigns[selected_account].remove(campaign)
-                        save_campaigns(campaigns)
-                        st.success("تم حذف الحملة بنجاح!")
-                        break
-                else:
-                    st.error("رقم الحملة غير موجود.")
+        # تحويل البيانات إلى جدول
+        campaign_table = []
+        for campaign in campaign_data:
+            campaign_table.append([
+                campaign["id"],
+                campaign["start_date"],
+                campaign["end_date"],
+                campaign["amount"],
+                campaign["account_name"],
+                campaign["days"]
+            ])
+
+        # عرض الجدول باستخدام Streamlit
+        st.table(campaign_table)
+
+        # حذف حملة
+        campaign_id_to_delete = st.number_input("أدخل رقم الحملة لحذفها", min_value=1)
+        if st.button("حذف الحملة"):
+            for campaign in campaigns[selected_account]:
+                if campaign["id"] == campaign_id_to_delete:
+                    campaigns[selected_account].remove(campaign)
+                    save_campaigns(campaigns)
+                    st.success("تم حذف الحملة بنجاح!")
+                    break
+            else:
+                st.error("رقم الحملة غير موجود.")
