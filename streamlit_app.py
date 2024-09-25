@@ -150,4 +150,7 @@ elif st.session_state.page == "عرض الحملات المسجلة":
     
     # إنشاء جدول باستخدام pandas
     if all_campaigns:
-        df = pd.DataFrame(all_ca
+        df = pd.DataFrame(all_campaigns)
+        st.dataframe(df)
+    else:
+        st.write("لا توجد حملات مسجلة.")
