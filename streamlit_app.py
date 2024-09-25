@@ -21,16 +21,27 @@ accounts = load_accounts()
 
 # زر التنقل بين الصفحات
 st.sidebar.title("التنقل")
-page = st.sidebar.selectbox("اختر الصفحة", ["الصفحة الرئيسية", "إدارة الحسابات", "إدارة الحملات"])
+if st.sidebar.button("الصفحة الرئيسية"):
+    st.session_state.page = "الصفحة الرئيسية"
+if st.sidebar.button("إدارة الحسابات"):
+    st.session_state.page = "إدارة الحسابات"
+if st.sidebar.button("إدارة الحملات"):
+    st.session_state.page = "إدارة الحملات"
+if st.sidebar.button("عرض الحملات المسجلة"):
+    st.session_state.page = "عرض الحملات"
+
+# تعيين الصفحة الافتراضية
+if 'page' not in st.session_state:
+    st.session_state.page = "الصفحة الرئيسية"
 
 # الصفحة الرئيسية
-if page == "الصفحة الرئيسية":
+if st.session_state.page == "الصفحة الرئيسية":
     st.title("الصفحة الرئيسية")
     st.write("مرحبًا بك في التطبيق!")
     st.write("اختر من القائمة الجانبية للانتقال إلى الصفحات الأخرى.")
 
 # إدارة الحسابات
-elif page == "إدارة الحسابات":
+elif st.session_state.page == "إدارة الحسابات":
     st.title("إدارة الحسابات")
     selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()) + ["إضافة حساب جديد"])
 
@@ -59,7 +70,7 @@ elif page == "إدارة الحسابات":
             st.success("تم تحديث الحساب بنجاح!")
 
 # إدارة الحملات
-elif page == "إدارة الحملات":
+elif st.session_state.page == "إدارة الحملات":
     st.title("إدارة الحملات")
     selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()))
 
@@ -117,3 +128,21 @@ elif page == "إدارة الحملات":
             save_accounts(accounts)
 
             st.success("تم تسجيل الحملة بنجاح!")
+
+# عرض الحملات المسجلة
+elif st.session_state.page == "عرض الحملات المسجلة":
+    st.title("عرض الحملات المسجلة")
+    for account_name, account_data in accounts.items():
+        st.subheader(f"الحساب: {account_name}")
+        campaigns = account_data.get("campaigns", [])
+        if campaigns:
+            for campaign in campaigns:
+                st.write(f"**حملة ID: {campaign['id']}**")
+                st.write(f"**المبلغ:** {campaign['amount']}")
+                st.write(f"**عدد الأيام:** {campaign['days']}")
+                st.write(f"**تاريخ بداية الحملة:** {pd.to_datetime(campaign['start_date']).date()}")
+                end_date = pd.to_datetime(campaign['start_date']) + timedelta(days=campaign['days'])
+                st.write(f"**تاريخ نهاية الحملة:** {end_date.date()}")
+                st.write("---")
+        else:
+            st.write("لا توجد حملات مسجلة.")
