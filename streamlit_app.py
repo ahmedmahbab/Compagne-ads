@@ -36,32 +36,30 @@ campaigns = load_campaigns()
 # واجهة المستخدم
 st.title("إدارة الحملات")
 
-# زر إضافة حساب
-if st.button("إضافة حساب"):
-    account_name = st.text_input("اسم الحساب")
-    if st.button("تأكيد إضافة الحساب"):
-        if account_name and account_name not in accounts:
-            accounts[account_name] = {"next_campaign_id": 1, "campaigns": []}
-            save_accounts(accounts)
-            st.success("تم إضافة الحساب بنجاح!")
-        else:
-            st.error("يرجى إدخال اسم حساب صحيح أو الحساب موجود بالفعل.")
+# قسم إضافة حساب
+st.header("إضافة حساب")
+account_name = st.text_input("اسم الحساب")
+if st.button("تأكيد إضافة الحساب"):
+    if account_name and account_name not in accounts:
+        accounts[account_name] = {"next_campaign_id": 1, "campaigns": []}
+        save_accounts(accounts)
+        st.success("تم إضافة الحساب بنجاح!")
+    else:
+        st.error("يرجى إدخال اسم حساب صحيح أو الحساب موجود بالفعل.")
 
 # عرض الحسابات
-st.sidebar.title("الحسابات")
-selected_account = st.sidebar.selectbox("اختر حسابًا", list(accounts.keys()))
+st.header("الحسابات المتاحة")
+selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()))
 
 if selected_account:
     st.write(f"حساب: {selected_account}")
-    if "next_campaign_id" not in accounts[selected_account]:
-        accounts[selected_account]["next_campaign_id"] = 1
-
+    
     # إضافة حملة
-    st.write("إضافة حملة")
+    st.header("إضافة حملة")
     campaign_amount = st.number_input("المبلغ للحملة")
-    campaign_days = st.number_input("عدد الأيام")
+    campaign_days = st.number_input("عدد الأيام", min_value=1)
     start_date = st.date_input("تاريخ بداية الحملة", value=datetime.today())
-    end_date = start_date + timedelta(days=int(campaign_days))  # تاريخ نهاية الحملة
+    end_date = start_date + timedelta(days=campaign_days)  # تاريخ نهاية الحملة
     st.write("تاريخ نهاية الحملة:", end_date)
 
     if st.button("تسجيل الحملة"):
@@ -80,10 +78,9 @@ if selected_account:
         st.success("تم تسجيل الحملة بنجاح!")
 
 # عرض الحملات المسجلة
-st.write("الحملات المسجلة")
+st.header("الحملات المسجلة")
 if selected_account in campaigns and campaigns[selected_account]:
     df = pd.DataFrame(campaigns[selected_account])
     st.dataframe(df)
 else:
     st.write("لا توجد حملات مسجلة.")
-
