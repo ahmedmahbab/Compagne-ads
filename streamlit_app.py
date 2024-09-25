@@ -1,3 +1,19 @@
+# تحميل الحسابات من ملف JSON
+try:
+    with open('accounts.json', 'r') as f:
+        accounts = json.load(f)
+except FileNotFoundError:
+    accounts = {}
+except json.JSONDecodeError:
+    accounts = {}
+
+st.write("الحسابات المحملة:", accounts)  # هذا سيساعدك على رؤية المحتوى
+if "next_campaign_id" not in accounts[account_name]:
+    accounts[account_name]["next_campaign_id"] = 1  # تعيين القيمة الافتراضية
+selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()))
+
+if selected_account not in accounts:
+    st.error("الحساب المحدد غير موجود.")
 import json
 import streamlit as st
 
