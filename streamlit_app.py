@@ -1,7 +1,7 @@
-import json
 import streamlit as st
+import json
 import pandas as pd
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 # تحميل الحسابات من ملف JSON
 def load_accounts():
@@ -11,6 +11,11 @@ def load_accounts():
     except (FileNotFoundError, json.JSONDecodeError):
         return {}
 
+# حفظ الحسابات إلى ملف JSON
+def save_accounts(accounts):
+    with open('accounts.json', 'w') as f:
+        json.dump(accounts, f)
+
 # تحميل الحملات من ملف JSON
 def load_campaigns():
     try:
@@ -19,135 +24,66 @@ def load_campaigns():
     except (FileNotFoundError, json.JSONDecodeError):
         return {}
 
-# حفظ الحسابات إلى ملف JSON
-def save_accounts(accounts):
-    with open('accounts.json', 'w') as f:
-        json.dump(accounts, f, ensure_ascii=False, indent=4)
-
 # حفظ الحملات إلى ملف JSON
 def save_campaigns(campaigns):
     with open('campaigns.json', 'w') as f:
-        json.dump(campaigns, f, ensure_ascii=False, indent=4)
+        json.dump(campaigns, f)
 
-# تحميل البيانات
+# إعداد البيانات
 accounts = load_accounts()
 campaigns = load_campaigns()
 
 # واجهة المستخدم
-st.title("إدارة الحسابات والحملات")
+st.title("إدارة الحملات")
 
-# التنقل بين الصفحات
-if st.sidebar.button("إدارة الحسابات"):
-    st.header("إدارة الحسابات")
-    
-    selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()) + ["إضافة حساب جديد"])
-
-    if selected_account == "إضافة حساب جديد":
-        new_account_name = st.text_input("أدخل اسم الحساب الجديد")
-        new_limit = st.number_input("أدخل المبلغ المحدد", min_value=0)
-        new_date = st.date_input("أدخل التاريخ المحدد", value=pd.Timestamp.now())
-
-        if st.button("إضافة حساب"):
-            if new_account_name:
-                if new_account_name not in accounts:
-                    accounts[new_account_name] = {
-                        "next_campaign_id": 1,
-                        "campaigns": [],
-                        "limit": new_limit,
-                        "date": str(new_date)
-                    }
-                    save_accounts(accounts)
-                    st.success("تم إضافة الحساب الجديد بنجاح!")
-                else:
-                    st.error("هذا الحساب موجود بالفعل.")
-            else:
-                st.error("يرجى إدخال اسم الحساب.")
-    else:
-        st.write("تعديل الحساب:", selected_account)
-        current_limit = accounts[selected_account].get("limit", 0)
-        current_date = accounts[selected_account].get("date", "غير محدد")
-        
-        new_limit = st.number_input("تعديل المبلغ المحدد", value=current_limit)
-        new_date = st.date_input("تعديل التاريخ المحدد", value=pd.to_datetime(current_date))
-
-        if st.button("تحديث الحساب"):
-            accounts[selected_account]["limit"] = new_limit
-            accounts[selected_account]["date"] = str(new_date)
+# زر إضافة حساب
+if st.button("إضافة حساب"):
+    account_name = st.text_input("اسم الحساب")
+    if st.button("تأكيد إضافة الحساب"):
+        if account_name and account_name not in accounts:
+            accounts[account_name] = {"next_campaign_id": 1, "campaigns": []}
             save_accounts(accounts)
-            st.success("تم تحديث الحساب بنجاح!")
-
-# إضافة حملة جديدة
-if st.sidebar.button("إضافة حملة"):
-    st.header("إضافة حملة جديدة")
-
-    selected_account = st.selectbox("اختر حسابًا لإضافة حملة", list(accounts.keys()))
-
-    if selected_account:
-        campaign_amount = st.number_input("أدخل المبلغ للحملة")
-        campaign_days = st.number_input("عدد الأيام", min_value=1)
-        start_date = st.date_input("تاريخ بداية الحملة")
-        end_date = start_date + timedelta(days=campaign_days)
-
-        if st.button("تسجيل الحملة"):
-            campaign_id = accounts[selected_account]["next_campaign_id"]
-            
-            if selected_account not in campaigns:
-                campaigns[selected_account] = []
-
-            campaigns[selected_account].append({
-                "id": campaign_id,
-                "amount": campaign_amount,
-                "days": campaign_days,
-                "account_name": selected_account,
-                "start_date": str(start_date),
-                "end_date": str(end_date)
-            })
-
-            accounts[selected_account]["next_campaign_id"] += 1
-            
-            save_accounts(accounts)
-            save_campaigns(campaigns)
-
-            st.success("تم تسجيل الحملة بنجاح!")
-
-# إدارة الحملات
-if st.sidebar.button("إدارة الحملات"):
-    st.header("إدارة الحملات")
-
-    selected_account = st.selectbox("اختر حسابًا لإدارة الحملات", list(accounts.keys()))
-
-    if selected_account in campaigns:
-        if not campaigns[selected_account]:  # إذا لم يكن هناك حملات
-            st.write("لا توجد حملات مسجلة في هذا الحساب.")
-            if st.button("الرجوع إلى حساب آخر"):
-                st.experimental_rerun()  # إعادة تشغيل التطبيق لعرض الحسابات مرة أخرى
+            st.success("تم إضافة الحساب بنجاح!")
         else:
-            st.write("الحملات المسجلة:")
-            campaign_data = campaigns[selected_account]
+            st.error("يرجى إدخال اسم حساب صحيح أو الحساب موجود بالفعل.")
 
-            # تحويل البيانات إلى جدول
-            campaign_table = []
-            for index, campaign in enumerate(campaign_data, start=1):
-                campaign_table.append([
-                    index,  # الرقم التسلسلي
-                    campaign["start_date"],
-                    campaign["end_date"],
-                    campaign["account_name"],
-                    campaign["days"]
-                ])
+# عرض الحسابات
+st.sidebar.title("الحسابات")
+selected_account = st.sidebar.selectbox("اختر حسابًا", list(accounts.keys()))
 
-            # عرض الجدول باستخدام Streamlit
-            columns = ["الرقم التسلسلي", "تاريخ بداية الحملة", "تاريخ نهاية الحملة", "اسم الحساب", "عدد الأيام"]
-            st.table(pd.DataFrame(campaign_table, columns=columns))
+if selected_account:
+    st.write(f"حساب: {selected_account}")
+    if "next_campaign_id" not in accounts[selected_account]:
+        accounts[selected_account]["next_campaign_id"] = 1
 
-            # حذف حملة
-            campaign_id_to_delete = st.number_input("أدخل رقم الحملة لحذفها", min_value=1)
-            if st.button("حذف الحملة"):
-                for campaign in campaigns[selected_account]:
-                    if campaign["id"] == campaign_id_to_delete:
-                        campaigns[selected_account].remove(campaign)
-                        save_campaigns(campaigns)
-                        st.success("تم حذف الحملة بنجاح!")
-                        break
-                else:
-                    st.error("رقم الحملة غير موجود.")
+    # إضافة حملة
+    st.write("إضافة حملة")
+    campaign_amount = st.number_input("المبلغ للحملة")
+    campaign_days = st.number_input("عدد الأيام")
+    start_date = st.date_input("تاريخ بداية الحملة", value=datetime.today())
+    end_date = start_date + timedelta(days=int(campaign_days))  # تاريخ نهاية الحملة
+    st.write("تاريخ نهاية الحملة:", end_date)
+
+    if st.button("تسجيل الحملة"):
+        campaign_id = accounts[selected_account]["next_campaign_id"]
+        campaigns[selected_account] = campaigns.get(selected_account, [])
+        campaigns[selected_account].append({
+            "id": campaign_id,
+            "amount": campaign_amount,
+            "days": campaign_days,
+            "start_date": str(start_date),
+            "end_date": str(end_date)
+        })
+        accounts[selected_account]["next_campaign_id"] += 1
+        save_accounts(accounts)
+        save_campaigns(campaigns)
+        st.success("تم تسجيل الحملة بنجاح!")
+
+# عرض الحملات المسجلة
+st.write("الحملات المسجلة")
+if selected_account in campaigns and campaigns[selected_account]:
+    df = pd.DataFrame(campaigns[selected_account])
+    st.dataframe(df)
+else:
+    st.write("لا توجد حملات مسجلة.")
+
