@@ -137,13 +137,13 @@ if st.sidebar.button("إدارة الحملات"):
                     index,  # الرقم التسلسلي
                     campaign["start_date"],
                     campaign["end_date"],
-                    campaign["amount"],
                     campaign["account_name"],
                     campaign["days"]
                 ])
 
             # عرض الجدول باستخدام Streamlit
-            st.table(campaign_table)
+            columns = ["الرقم التسلسلي", "تاريخ بداية الحملة", "تاريخ نهاية الحملة", "اسم الحساب", "عدد الأيام"]
+            st.table(pd.DataFrame(campaign_table, columns=columns))
 
             # حذف حملة
             campaign_id_to_delete = st.number_input("أدخل رقم الحملة لحذفها", min_value=1)
