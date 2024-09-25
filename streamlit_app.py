@@ -114,6 +114,32 @@ elif page == "عرض الحملات":
 
     if selected_account in campaigns and campaigns[selected_account]:
         df = pd.DataFrame(campaigns[selected_account])
-        st.dataframe(df)
+
+        # حذف العمود الأول (ID)
+        df = df.drop(columns=["id"])
+
+        # تسمية الأعمدة
+        df.columns = ["اسم الزبون", "المبلغ", "عدد الأيام", "تاريخ البداية", "تاريخ النهاية"]
+
+        # عرض الجدول بتزيين إضافي
+        st.table(df.style.set_properties(**{
+            'background-color': 'lightblue',
+            'color': 'black',
+            'border-color': 'white',
+            'text-align': 'center',
+        }).set_table_styles([
+            {
+                'selector': 'thead th',
+                'props': [('background-color', 'darkblue'), ('color', 'white')]
+            },
+            {
+                'selector': 'tbody tr:nth-child(even)',
+                'props': [('background-color', '#f2f2f2')]
+            },
+            {
+                'selector': 'tbody tr:hover',
+                'props': [('background-color', '#d6e9f8')]
+            }
+        ]))
     else:
         st.write("لا توجد حملات مسجلة.")
