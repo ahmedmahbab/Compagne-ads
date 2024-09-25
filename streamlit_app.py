@@ -158,15 +158,31 @@ if page == "عرض الحملات":
         df["المبلغ"] = df["المبلغ"].map(lambda x: f"{x:,.2f} $")
         df["عدد الأيام"] = df["عدد الأيام"].map(lambda x: f"{x} يوم")
 
-        # عرض الأزرار بجانب كل حملة
+        # منطق عرض وتعديل الحملة
         for i, row in df.iterrows():
             col1, col2, col3 = st.columns([3, 1, 1])
             with col1:
                 st.write(f"{row['اسم الزبون']} - {row['المبلغ']} - {row['عدد الأيام']} يوم")
             with col2:
                 if st.button(f"✏️ تعديل {i+1}", key=f"edit_{i}"):
-                    st.write(f"تم تعديل الحملة {i+1}")
-                    # هنا يمكنك إضافة منطق التعديل
+                    with st.form(f"edit_form_{i}"):
+                        new_customer_name = st.text_input("اسم الزبون", value=row["اسم الزبون"])
+                        new_amount = st.number_input("المبلغ", value=float(row["المبلغ"].replace("$", "").replace(",", "")))
+                        new_days = st.number_input("عدد الأيام", value=int(row["عدد الأيام"].replace(" يوم", "")))
+                        new_start_date = st.date_input("تاريخ البداية", value=pd.to_datetime(row["تاريخ البداية"]))
+                        new_end_date = st.date_input("تاريخ النهاية", value=pd.to_datetime(row["تاريخ النهاية"]))
+
+                        if st.form_submit_button("حفظ التعديلات"):
+                            campaigns[selected_account][i]["customer_name"] = new_customer_name
+                            campaigns[selected_account][i]["amount"] = round(new_amount, 2)
+                            campaigns[selected_account][i]["days"] = new_days
+                            campaigns[selected_account][i]["start_date"] = str(new_start_date)
+                            campaigns[selected_account][i]["end_date"] = str(new_end_date)
+
+                            save_campaigns(campaigns)
+                            st.success(f"تم تعديل الحملة {i+1} بنجاح!")
+                            st.experimental_rerun()  # إعادة تحميل الصفحة لتحديث البيانات
+
             with col3:
                 if st.button(f"🗑️ حذف {i+1}", key=f"delete_{i}"):
                     campaigns[selected_account].pop(i)
