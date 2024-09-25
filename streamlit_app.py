@@ -132,17 +132,22 @@ elif st.session_state.page == "إدارة الحملات":
 # عرض الحملات المسجلة
 elif st.session_state.page == "عرض الحملات المسجلة":
     st.title("عرض الحملات المسجلة")
+    
+    # إعداد البيانات للعرض في جدول
+    all_campaigns = []
     for account_name, account_data in accounts.items():
-        st.subheader(f"الحساب: {account_name}")
         campaigns = account_data.get("campaigns", [])
-        if campaigns:
-            for campaign in campaigns:
-                st.write(f"**حملة ID: {campaign['id']}**")
-                st.write(f"**المبلغ:** {campaign['amount']}")
-                st.write(f"**عدد الأيام:** {campaign['days']}")
-                st.write(f"**تاريخ بداية الحملة:** {pd.to_datetime(campaign['start_date']).date()}")
-                end_date = pd.to_datetime(campaign['start_date']) + timedelta(days=campaign['days'])
-                st.write(f"**تاريخ نهاية الحملة:** {end_date.date()}")
-                st.write("---")
-        else:
-            st.write("لا توجد حملات مسجلة.")
+        for campaign in campaigns:
+            end_date = pd.to_datetime(campaign['start_date']) + timedelta(days=campaign['days'])
+            all_campaigns.append({
+                "الرقم التسلسلي": campaign['id'],
+                "تاريخ تسجيل الحملة": campaign['start_date'],
+                "تاريخ إطلاق الحملة": end_date.date(),
+                "المبلغ": campaign['amount'],
+                "الحساب": account_name,
+                "عدد الأيام": campaign['days'],
+            })
+    
+    # إنشاء جدول باستخدام pandas
+    if all_campaigns:
+        df = pd.DataFrame(all_ca
