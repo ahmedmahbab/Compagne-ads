@@ -37,7 +37,7 @@ campaigns = load_campaigns()
 st.title("إدارة الحسابات والحملات")
 
 # التنقل بين الصفحات
-if st.sidebar.button("الحسابات"):
+if st.sidebar.button("إدارة الحسابات"):
     st.header("إدارة الحسابات")
     
     selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()) + ["إضافة حساب جديد"])
