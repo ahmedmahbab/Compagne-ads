@@ -1,14 +1,14 @@
 {
-    "حساب 1": {
+    "حساب1": {
         "next_campaign_id": 1,
         "campaigns": [],
-        "limit": 50,
-        "date": "2024-09-30"
+        "limit": 1000,
+        "date": "2024-09-25"
     },
-    "حساب 2": {
+    "حساب2": {
         "next_campaign_id": 1,
         "campaigns": [],
-        "limit": 80,
-        "date": "2024-10-01"
+        "limit": 2000,
+        "date": "2024-09-25"
     }
 }
