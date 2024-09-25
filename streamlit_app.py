@@ -158,29 +158,20 @@ if page == "عرض الحملات":
         df["المبلغ"] = df["المبلغ"].map(lambda x: f"{x:,.2f} $")
         df["عدد الأيام"] = df["عدد الأيام"].map(lambda x: f"{x} يوم")
 
-        # تنسيق الألوان الهادئة وتوسيط الأعمدة
-        df_style = df.style.set_properties(**{
-            'text-align': 'center',
-            'background-color': '#f0f8ff',  # لون خلفية هادئ
-            'color': 'black',
-            'border-color': 'white'
-        }).set_table_styles([
-            {
-                'selector': 'thead th',
-                'props': [('background-color', '#b0c4de'), ('color', 'white')]  # خلفية هادئة لرأس الجدول
-            },
-            {
-                'selector': 'tbody tr:nth-child(even)',
-                'props': [('background-color', '#e6f2ff')]  # صفوف متناوبة
-            },
-            {
-                'selector': 'tbody tr:hover',
-                'props': [('background-color', '#dcdcdc')]  # تأثير عند التمرير
-            }
-        ])
-
-        # عرض الجدول
-        st.write(df_style)
+        # عرض الأزرار بجانب كل حملة
+        for i, row in df.iterrows():
+            col1, col2, col3 = st.columns([3, 1, 1])
+            with col1:
+                st.write(f"{row['اسم الزبون']} - {row['المبلغ']} - {row['عدد الأيام']} يوم")
+            with col2:
+                if st.button(f"✏️ تعديل {i+1}", key=f"edit_{i}"):
+                    st.write(f"تم تعديل الحملة {i+1}")
+                    # هنا يمكنك إضافة منطق التعديل
+            with col3:
+                if st.button(f"🗑️ حذف {i+1}", key=f"delete_{i}"):
+                    campaigns[selected_account].pop(i)
+                    save_campaigns(campaigns)
+                    st.success(f"تم حذف الحملة {i+1}")
+                    st.experimental_rerun()  # إعادة تحميل الصفحة بعد الحذف
     else:
         st.write("لا توجد حملات مسجلة.")
-
