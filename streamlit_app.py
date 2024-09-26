@@ -39,23 +39,25 @@ def accueil_page():
 # إدارة الحسابات
 def manage_accounts_page():
     st.header("إدارة الحسابات")
-    # محتوى صفحة إدارة الحسابات (ضع الكود الخاص بك هنا)
+    st.write("محتوى صفحة إدارة الحسابات")
 
 # إضافة حملة
 def add_campaign_page():
     st.header("إضافة حملة جديدة")
-    # محتوى صفحة إضافة حملة (ضع الكود الخاص بك هنا)
+    st.write("محتوى صفحة إضافة حملة")
 
 # عرض الحملات
 def view_campaigns_page():
     st.header("عرض الحملات")
-    # محتوى صفحة عرض الحملات (ضع الكود الخاص بك هنا)
-
-# تشغيل التطبيق
+    st.write("محتوى صفحة عرض الحملات")
 
 # تهيئة الصفحة المختارة في حالة الجلسة
 if 'page' not in st.session_state:
     st.session_state['page'] = 'home'
+
+# وظيفة لتحديث الصفحة عند النقر
+def navigate_to(page_key):
+    st.session_state['page'] = page_key
 
 # وظيفة لإنشاء عنصر تنقل
 def nav_item(label, page_key):
@@ -69,8 +71,8 @@ def nav_item(label, page_key):
             text-align: center;
             padding: 10px;
             margin-bottom: 5px;
-            cursor: pointer;
             border-radius: 5px;
+            cursor: pointer;
         """
     else:
         # النمط العادي
@@ -79,36 +81,27 @@ def nav_item(label, page_key):
             text-align: center;
             padding: 10px;
             margin-bottom: 5px;
-            cursor: pointer;
             border-radius: 5px;
+            cursor: pointer;
         """
 
-    # إنشاء عنصر HTML قابل للنقر
+    # إنشاء عنصر HTML مع ربط الصفحة
     nav_html = f"""
-    <p style="{style}" onclick="location.href='/?page={page_key}'">{label}</p>
+    <p style="{style}" onclick="window.location.href='/?page={page_key}'">{label}</p>
     """
-
-    st.sidebar.markdown(nav_html, unsafe_allow_html=True)
+    
+    # عند النقر، تحديث الصفحة المختارة
+    if st.sidebar.markdown(nav_html, unsafe_allow_html=True):
+        navigate_to(page_key)
 
 # عرض التنقل الجانبي
 st.sidebar.title("التنقل")
 
-# تعريف الصفحات
-pages = {
-    "الصفحة الرئيسية": "home",
-    "إدارة الحسابات": "manage_accounts",
-    "إضافة حملة": "add_campaign",
-    "عرض الحملات": "view_campaigns"
-}
-
-# قراءة المعلمة 'page' من عنوان URL
-query_params = st.experimental_get_query_params()
-if 'page' in query_params and query_params['page'][0] in pages.values():
-    st.session_state['page'] = query_params['page'][0]
-
-# عرض عناصر التنقل
-for label, page_key in pages.items():
-    nav_item(label, page_key)
+# ربط الصفحات بالعناوين
+nav_item("الصفحة الرئيسية", "home")
+nav_item("إدارة الحسابات", "manage_accounts")
+nav_item("إضافة حملة", "add_campaign")
+nav_item("عرض الحملات", "view_campaigns")
 
 # عرض الصفحة المختارة
 if st.session_state['page'] == 'home':
