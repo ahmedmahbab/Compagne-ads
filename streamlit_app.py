@@ -199,16 +199,15 @@ def view_campaigns_page():
                     save_campaigns(campaigns)
                     st.success("✅ تم حذف الحملة بنجاح!")
 
-                    # استبدل st.experimental_rerun() بالسطر المناسب
-                    st.experimental_rerun()  # إذا لم يعمل هذا السطر، جرب السطر التالي:
-                    # st.experimental_rerun()
-                    # أو إذا كان كلاهما لا يعمل، جرب:
-                    # st.rerun()
+                    # تحديث حالة التطبيق لإعادة تحميل الصفحة
+                    st.session_state['deleted'] = True
+                    st.experimental_rerun()  # جرب استخدام هذه الدالة بعد تحديث Streamlit
 
             else:
                 st.info("ℹ️ لا توجد حملات لهذا الحساب.")
     else:
         st.info("ℹ️ لا توجد حملات مسجلة.")
+
 
 # لوحة التحكم
 def dashboard_page():
