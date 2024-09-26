@@ -22,7 +22,7 @@ def save_campaigns(campaigns):
         json.dump(campaigns, f, ensure_ascii=False, indent=4)
 
 def view_campaigns_page():
-    st.header("الحملات المسجلة")
+    st.title("عرض الحملات")
 
     accounts = load_accounts()
     campaigns = load_campaigns()
@@ -40,4 +40,3 @@ def view_campaigns_page():
         st.write(df)
 
         # منطق التعديل والحذف كما في الكود السابق.
-
