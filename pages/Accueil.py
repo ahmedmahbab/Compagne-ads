@@ -18,8 +18,8 @@ def accueil_page():
         """, unsafe_allow_html=True
     )
 
-    # تأكد من المسار الصحيح للملف (هنا أفترض وجود الصورة في مجلد static)
-    st.image("pages/logo.png", use_column_width=False, width=200, caption="شعار الشركة")
+    # تحميل الصورة من مجلد 'assets'
+    st.image("assets/logo.png", use_column_width=False, width=200, caption="شعار الشركة")
     st.markdown('<p class="main-title">مرحبًا بكم في تطبيق إدارة الحملات</p>', unsafe_allow_html=True)
     st.markdown('<p class="sub-title">إدارة الحملات بسهولة وفعالية</p>', unsafe_allow_html=True)
 
