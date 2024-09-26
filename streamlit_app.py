@@ -68,7 +68,7 @@ def show_notifications(account_name, account, campaigns):
         total_amount = 0.0
     account_limit = account["limit"]
 
-    # عرض المبلغ الإجمالي للحساب
+    # **عرض المبلغ الإجمالي للحساب**
     st.write(f"**المبلغ الإجمالي للحساب حتى الآن:** {total_amount:,.2f} $")
 
     # تنبيه عند اقتراب تاريخ الدفع (3 أيام قبل الموعد)
