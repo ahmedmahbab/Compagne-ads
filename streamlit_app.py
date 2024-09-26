@@ -192,20 +192,23 @@ def view_campaigns_page():
                     <p><strong>🏁 تاريخ النهاية:</strong> {row['end_date']}</p>
                 </div>
                 """, unsafe_allow_html=True)
-                
+
                 # زر حذف الحملة باستخدام st.button
                 if st.button("🗑️ حذف الحملة", key=f"delete_{selected_account}_{idx}"):
                     campaigns[selected_account].pop(idx)
                     save_campaigns(campaigns)
                     st.success("✅ تم حذف الحملة بنجاح!")
-                    st.experimental_rerun()
-                
-                st.markdown("<hr>", unsafe_allow_html=True)
-        else:
-            st.info("ℹ️ لا توجد حملات لهذا الحساب.")
+
+                    # استبدل st.experimental_rerun() بالسطر المناسب
+                    st.experimental_rerun()  # إذا لم يعمل هذا السطر، جرب السطر التالي:
+                    # st.experimental_rerun()
+                    # أو إذا كان كلاهما لا يعمل، جرب:
+                    # st.rerun()
+
+            else:
+                st.info("ℹ️ لا توجد حملات لهذا الحساب.")
     else:
         st.info("ℹ️ لا توجد حملات مسجلة.")
-
 
 # لوحة التحكم
 def dashboard_page():
