@@ -134,8 +134,11 @@ elif page == "إضافة حملة":
             st.session_state.campaign_days = 1
 
             st.success("تم تسجيل الحملة بنجاح!")
-            # بعد تسجيل الحملة ونجاح العملية، يتم إعادة تحميل الصفحة لتفريغ الحقول
-            st.experimental_rerun()
+
+        # تحديث القيم الموجودة في الحقول تلقائيًا مع قيم session_state
+        st.session_state.customer_name = customer_name
+        st.session_state.campaign_amount = campaign_amount
+        st.session_state.campaign_days = campaign_days
 
 # صفحة عرض الحملات
 if page == "عرض الحملات":
