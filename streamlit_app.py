@@ -65,45 +65,45 @@ def nav_item(label, page_key):
     if st.session_state['page'] == page_key:
         # تطبيق نمط الصفحة المختارة
         style = """
-            background: linear-gradient(to right, #2E86C1, #85C1E9);
+            background-color: #2E86C1;
             color: white;
             font-weight: bold;
             text-align: center;
             padding: 10px;
-            margin-bottom: 5px;
-            border-radius: 5px;
+            margin-bottom: 10px;
+            border-radius: 10px;
             cursor: pointer;
         """
     else:
         # النمط العادي
         style = """
+            background-color: #f0f2f6;
             color: black;
             text-align: center;
             padding: 10px;
-            margin-bottom: 5px;
-            border-radius: 5px;
+            margin-bottom: 10px;
+            border-radius: 10px;
             cursor: pointer;
         """
 
-    # إنشاء عنصر HTML مع ربط الصفحة
+    # استخدام st.markdown لإنشاء عنصر HTML مع ارتباطه بتحديث الصفحة
     nav_html = f"""
-    <p style="{style}" onclick="window.location.href='/?page={page_key}'">{label}</p>
+    <div style="{style}" onclick="window.location.href = window.location.href.split('?')[0] + '?page={page_key}'">
+        {label}
+    </div>
     """
-    
-    # عند النقر، تحديث الصفحة المختارة
-    if st.sidebar.markdown(nav_html, unsafe_allow_html=True):
-        navigate_to(page_key)
+    st.sidebar.markdown(nav_html, unsafe_allow_html=True)
 
 # عرض التنقل الجانبي
 st.sidebar.title("التنقل")
 
-# ربط الصفحات بالعناوين
+# إنشاء عناصر التنقل
 nav_item("الصفحة الرئيسية", "home")
 nav_item("إدارة الحسابات", "manage_accounts")
 nav_item("إضافة حملة", "add_campaign")
 nav_item("عرض الحملات", "view_campaigns")
 
-# عرض الصفحة المختارة
+# ربط الصفحة المختارة بعرض المحتوى المناسب
 if st.session_state['page'] == 'home':
     accueil_page()
 elif st.session_state['page'] == 'manage_accounts':
