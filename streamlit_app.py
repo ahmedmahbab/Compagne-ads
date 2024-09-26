@@ -190,22 +190,22 @@ def view_campaigns_page():
                     <p><strong>📆 عدد الأيام:</strong> {row['days']} يوم</p>
                     <p><strong>🚀 تاريخ البداية:</strong> {row['start_date']}</p>
                     <p><strong>🏁 تاريخ النهاية:</strong> {row['end_date']}</p>
-                    <form action="#" method="post">
-                        <button name="delete_campaign" type="submit" value="{idx}" style='background-color:#e74c3c; color:white; padding:5px 10px; border:none; border-radius:3px;'>🗑️ حذف الحملة</button>
-                    </form>
                 </div>
                 """, unsafe_allow_html=True)
-                # التعامل مع حذف الحملة
-                if 'delete_campaign' in st.session_state:
-                    if st.session_state['delete_campaign'] == str(idx):
-                        campaigns[selected_account].pop(idx)
-                        save_campaigns(campaigns)
-                        st.success("✅ تم حذف الحملة بنجاح!")
-                        st.experimental_rerun()
+                
+                # زر حذف الحملة باستخدام st.button
+                if st.button("🗑️ حذف الحملة", key=f"delete_{selected_account}_{idx}"):
+                    campaigns[selected_account].pop(idx)
+                    save_campaigns(campaigns)
+                    st.success("✅ تم حذف الحملة بنجاح!")
+                    st.experimental_rerun()
+                
+                st.markdown("<hr>", unsafe_allow_html=True)
         else:
             st.info("ℹ️ لا توجد حملات لهذا الحساب.")
     else:
         st.info("ℹ️ لا توجد حملات مسجلة.")
+
 
 # لوحة التحكم
 def dashboard_page():
