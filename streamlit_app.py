@@ -1,9 +1,4 @@
 import streamlit as st
-from pages.Accueil import accueil_page
-from pages.manage_accounts import manage_accounts_page
-from pages.add_campaign import add_campaign_page
-from pages.view_campaigns import view_campaigns_page
-
 st.sidebar.title("التنقل")
 
 # إضافة التنقل الجانبي
