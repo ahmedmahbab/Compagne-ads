@@ -132,17 +132,34 @@ def view_campaigns_page():
 
 # تشغيل التطبيق
 
-st.sidebar.title("الإعدادات")
+st.markdown(
+    """
+    <style>
+    .sidebar .sidebar-content {
+        background-color: #f0f2f6;
+    }
+    .sidebar .sidebar-content .widget {
+        background-color: #f0f2f6;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        padding: 20px;
+        text-align: center;
+    }
+    </style>
+    """, unsafe_allow_html=True
+)
 
-# إضافة التنقل الجانبي
-page = st.sidebar.radio("انتقل إلى:", ["الصفحة الرئيسية", "إدارة الحسابات الإعلانية", "إضافة حملة جديدة", "عرض الحملات الإعلانية"])
+st.sidebar.title("التنقل")
+
+# استخدام selectbox لتقديم قائمة أنيقة
+page = st.sidebar.selectbox("اختر صفحة:", ["الصفحة الرئيسية", "إدارة الحسابات", "إضافة حملة", "عرض الحملات"])
 
 # استدعاء الصفحة المختارة
 if page == "الصفحة الرئيسية":
     accueil_page()
-elif page == "إدارة الحسابات الإعلانية":
+elif page == "إدارة الحسابات":
     manage_accounts_page()
-elif page == "إضافة حملة جديدة":
+elif page == "إضافة حملة":
     add_campaign_page()
-elif page == "عرض الحملات الإعلانية":
+elif page == "عرض الحملات":
     view_campaigns_page()
