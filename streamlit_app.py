@@ -4,6 +4,8 @@ from pages.manage_accounts import manage_accounts_page
 from pages.add_campaign import add_campaign_page
 from pages.view_campaigns import view_campaigns_page
 
+st.sidebar.title("التنقل")
+
 # إضافة التنقل الجانبي
 page = st.sidebar.radio("اختر صفحة:", ["الصفحة الرئيسية", "إدارة الحسابات", "إضافة حملة", "عرض الحملات"])
 
