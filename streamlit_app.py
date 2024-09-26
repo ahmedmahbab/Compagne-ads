@@ -147,6 +147,7 @@ def nav_item(label, page_key):
     """
     st.sidebar.markdown(nav_html, unsafe_allow_html=True)
 
+
 # عرض التنقل الجانبي
 st.sidebar.title("التنقل")
 
@@ -155,7 +156,6 @@ nav_item("الصفحة الرئيسية", "home")
 nav_item("إدارة الحسابات", "manage_accounts")
 nav_item("إضافة حملة", "add_campaign")
 nav_item("عرض الحملات", "view_campaigns")
-nav_item("تعديل الحملات", "edit_campaigns")
 
 # ربط الصفحة المختارة بعرض المحتوى المناسب
 if st.session_state['page'] == 'home':
@@ -166,5 +166,3 @@ elif st.session_state['page'] == 'add_campaign':
     add_campaign_page()
 elif st.session_state['page'] == 'view_campaigns':
     view_campaigns_page()
-elif st.session_state['page'] == 'edit_campaigns':
-    edit_campaigns_page()
