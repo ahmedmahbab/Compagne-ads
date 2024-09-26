@@ -25,7 +25,7 @@ def save_campaigns(campaigns):
         json.dump(campaigns, f, ensure_ascii=False, indent=4)
 
 def add_campaign_page():
-    st.header("إضافة حملة")
+    st.title("إضافة حملة جديدة")
 
     accounts = load_accounts()
     campaigns = load_campaigns()
@@ -33,9 +33,9 @@ def add_campaign_page():
     selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()))
 
     if selected_account:
-        customer_name = st.text_input("اسم الزبون", value="")
-        campaign_amount = st.number_input("المبلغ للحملة", min_value=0.0, format="%.2f", value=0.0)
-        campaign_days = st.number_input("عدد الأيام", min_value=1, value=1)
+        customer_name = st.text_input("اسم الزبون")
+        campaign_amount = st.number_input("المبلغ للحملة", min_value=0.0, format="%.2f")
+        campaign_days = st.number_input("عدد الأيام", min_value=1)
         start_date = st.date_input("تاريخ بداية الحملة", value=datetime.today())
         end_date = start_date + timedelta(days=campaign_days)
         st.write(f"تاريخ نهاية الحملة: {end_date}")
@@ -56,4 +56,3 @@ def add_campaign_page():
             save_campaigns(campaigns)
 
             st.success("تم تسجيل الحملة بنجاح!")
-
