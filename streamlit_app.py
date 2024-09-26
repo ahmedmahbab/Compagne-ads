@@ -68,6 +68,9 @@ def show_notifications(account_name, account, campaigns):
         total_amount = 0.0
     account_limit = account["limit"]
 
+    # عرض المبلغ الإجمالي للحساب
+    st.write(f"**المبلغ الإجمالي للحساب حتى الآن:** {total_amount:,.2f} $")
+
     # تنبيه عند اقتراب تاريخ الدفع (3 أيام قبل الموعد)
     if days_left <= 3 and days_left > 0:
         st.warning(f"حساب {account_name}: تبقى {days_left} يوم/أيام حتى موعد الدفع ({due_date}).")
@@ -214,6 +217,7 @@ def dashboard_page():
                 # حتى لو لم يكن هناك حملات، نظهر التنبيهات المتعلقة بتاريخ الدفع
                 show_notifications(account_name, account, [])
                 st.info(f"لا توجد حملات مسجلة لهذا الحساب.")
+            st.write("---")
     else:
         st.info("لا توجد حسابات حالياً.")
 
