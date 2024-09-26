@@ -151,15 +151,15 @@ st.markdown(
 
 st.sidebar.title("التنقل")
 
-# استخدام روابط ثابتة في الشريط الجانبي للتنقل
-page = st.sidebar.selectbox("اختر الصفحة", ["الصفحة الرئيسية", "إدارة الحسابات", "إضافة حملة", "عرض الحملات"])
+# استخدام selectbox لتقديم قائمة أنيقة
+page = st.sidebar.selectbox("اختر صفحة:", ["الصفحة الرئيسية", "إدارة الحسابات", "إضافة حملة", "عرض الحملات"])
 
-# عرض الروابط الثابتة في التنقل الجانبي
-if st.sidebar.button("الصفحة الرئيسية"):
+# استدعاء الصفحة المختارة
+if page == "الصفحة الرئيسية":
     accueil_page()
-if st.sidebar.button("إدارة الحسابات"):
+elif page == "إدارة الحسابات":
     manage_accounts_page()
-if st.sidebar.button("إضافة حملة"):
+elif page == "إضافة حملة":
     add_campaign_page()
-if st.sidebar.button("عرض الحملات"):
+elif page == "عرض الحملات":
     view_campaigns_page()
