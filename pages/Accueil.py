@@ -19,7 +19,7 @@ def accueil_page():
     )
 
     # تحميل الصورة من مجلد 'assets'
-    st.image("assets/logo.png", use_column_width=False, width=200, caption="شعار الشركة")
+    st.image("assets/logo.jpg", use_column_width=False, width=200, caption="شعار الشركة")
     st.markdown('<p class="main-title">مرحبًا بكم في تطبيق إدارة الحملات</p>', unsafe_allow_html=True)
     st.markdown('<p class="sub-title">إدارة الحملات بسهولة وفعالية</p>', unsafe_allow_html=True)
 
