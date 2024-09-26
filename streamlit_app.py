@@ -108,54 +108,23 @@ def edit_campaigns_page():
 if 'page' not in st.session_state:
     st.session_state['page'] = 'home'
 
-# وظيفة لتحديث الصفحة عند النقر
-def navigate_to(page_key):
-    st.session_state['page'] = page_key
-
-# وظيفة لإنشاء عنصر تنقل
-def nav_item(label, page_key):
-    # تحقق مما إذا كانت هذه هي الصفحة المختارة
-    if st.session_state['page'] == page_key:
-        # تطبيق نمط الصفحة المختارة
-        style = """
-            background-color: #2E86C1;
-            color: white;
-            font-weight: bold;
-            text-align: center;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-        """
-    else:
-        # النمط العادي
-        style = """
-            background-color: #f0f2f6;
-            color: black;
-            text-align: center;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-        """
-
-    # استخدام st.markdown لإنشاء عنصر HTML مع ارتباطه بتحديث الصفحة
-    nav_html = f"""
-    <div style="{style}" onclick="window.location.href = window.location.href.split('?')[0] + '?page={page_key}'">
-        {label}
-    </div>
-    """
-    st.sidebar.markdown(nav_html, unsafe_allow_html=True)
-
-
-# عرض التنقل الجانبي
+# استخدام أزرار في الشريط الجانبي للتنقل
 st.sidebar.title("التنقل")
 
-# إنشاء عناصر التنقل
-nav_item("الصفحة الرئيسية", "home")
-nav_item("إدارة الحسابات", "manage_accounts")
-nav_item("إضافة حملة", "add_campaign")
-nav_item("عرض الحملات", "view_campaigns")
+if st.sidebar.button("الصفحة الرئيسية"):
+    st.session_state['page'] = 'home'
+
+if st.sidebar.button("إدارة الحسابات"):
+    st.session_state['page'] = 'manage_accounts'
+
+if st.sidebar.button("إضافة حملة"):
+    st.session_state['page'] = 'add_campaign'
+
+if st.sidebar.button("عرض الحملات"):
+    st.session_state['page'] = 'view_campaigns'
+
+if st.sidebar.button("تعديل الحملات"):
+    st.session_state['page'] = 'edit_campaigns'
 
 # ربط الصفحة المختارة بعرض المحتوى المناسب
 if st.session_state['page'] == 'home':
@@ -166,3 +135,5 @@ elif st.session_state['page'] == 'add_campaign':
     add_campaign_page()
 elif st.session_state['page'] == 'view_campaigns':
     view_campaigns_page()
+elif st.session_state['page'] == 'edit_campaigns':
+    edit_campaigns_page()
