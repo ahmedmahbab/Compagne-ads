@@ -140,9 +140,9 @@ page = st.sidebar.radio("انتقل إلى:", ["الصفحة الرئيسية", 
 # استدعاء الصفحة المختارة
 if page == "الصفحة الرئيسية":
     accueil_page()
-elif page == "إدارة الحسابات":
+elif page == "إدارة الحسابات الإعلانية":
     manage_accounts_page()
-elif page == "إضافة حملة":
+elif page == "إضافة حملة جديدة":
     add_campaign_page()
-elif page == "عرض الحملات":
+elif page == "عرض الحملات الإعلانية":
     view_campaigns_page()
