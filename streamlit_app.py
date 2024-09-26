@@ -31,10 +31,10 @@ def save_campaigns(campaigns):
 
 # الصفحة الرئيسية
 def accueil_page():
-    st.title("مرحبًا بكم في تطبيق إدارة الحملات")
+    st.title("Al Nour Elite")
     
     # عرض اسم الشركة
-    st.header("Al Nour Elite")
+    st.header("مرحبًا بك في تطبيق إدارة الحملات")
     
     # العنوان الفرعي
     st.subheader("إدارة الحملات بسهولة وفعالية")
