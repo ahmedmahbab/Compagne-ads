@@ -88,6 +88,7 @@ if page == "إدارة الحسابات":
 elif page == "إضافة حملة":
     st.header("إضافة حملة")
 
+    # التأكد من وجود المتغيرات في حالة الجلسة (session state)
     if 'customer_name' not in st.session_state:
         st.session_state.customer_name = ""
     if 'campaign_amount' not in st.session_state:
@@ -98,13 +99,18 @@ elif page == "إضافة حملة":
     selected_account = st.selectbox("اختر حسابًا", list(accounts.keys()))
 
     if selected_account:
-        # إضافة خانة لاسم الزبون
+        # إدخال اسم الزبون
         customer_name = st.text_input("اسم الزبون", value=st.session_state.customer_name)
         
+        # إدخال مبلغ الحملة
         campaign_amount = st.number_input("المبلغ للحملة", min_value=0.0, format="%.2f", value=st.session_state.campaign_amount)
+        
+        # إدخال عدد الأيام
         campaign_days = st.number_input("عدد الأيام", min_value=1, value=st.session_state.campaign_days)
+        
+        # إدخال تاريخ بداية الحملة
         start_date = st.date_input("تاريخ بداية الحملة", value=datetime.today())
-        end_date = start_date + timedelta(days=campaign_days)  # تاريخ نهاية الحملة
+        end_date = start_date + timedelta(days=campaign_days)  # حساب تاريخ نهاية الحملة
         st.write(f"تاريخ نهاية الحملة: {end_date}")
 
         if st.button("تسجيل الحملة"):
@@ -122,12 +128,16 @@ elif page == "إضافة حملة":
             save_accounts(accounts)
             save_campaigns(campaigns)
 
-            # إعادة تعيين القيم لإفراغ الحقول
+            # إعادة تعيين القيم لإفراغ الخانات بعد التسجيل
             st.session_state.customer_name = ""
             st.session_state.campaign_amount = 0.0
             st.session_state.campaign_days = 1
 
             st.success("تم تسجيل الحملة بنجاح!")
+
+        # عرض الحقول بعد الحفظ
+        st.write("خانات فارغة لإدخال حملة جديدة.")
+
 
 # صفحة عرض الحملات
 if page == "عرض الحملات":
