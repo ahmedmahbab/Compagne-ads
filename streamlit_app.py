@@ -39,25 +39,23 @@ def accueil_page():
 # إدارة الحسابات
 def manage_accounts_page():
     st.header("إدارة الحسابات")
-    st.write("محتوى صفحة إدارة الحسابات")
+    # محتوى صفحة إدارة الحسابات (ضع الكود الخاص بك هنا)
 
 # إضافة حملة
 def add_campaign_page():
     st.header("إضافة حملة جديدة")
-    st.write("محتوى صفحة إضافة حملة")
+    # محتوى صفحة إضافة حملة (ضع الكود الخاص بك هنا)
 
 # عرض الحملات
 def view_campaigns_page():
     st.header("عرض الحملات")
-    st.write("محتوى صفحة عرض الحملات")
+    # محتوى صفحة عرض الحملات (ضع الكود الخاص بك هنا)
+
+# تشغيل التطبيق
 
 # تهيئة الصفحة المختارة في حالة الجلسة
 if 'page' not in st.session_state:
     st.session_state['page'] = 'home'
-
-# وظيفة لتحديث الصفحة عند النقر
-def navigate_to(page_key):
-    st.session_state['page'] = page_key
 
 # وظيفة لإنشاء عنصر تنقل
 def nav_item(label, page_key):
@@ -65,45 +63,54 @@ def nav_item(label, page_key):
     if st.session_state['page'] == page_key:
         # تطبيق نمط الصفحة المختارة
         style = """
-            background-color: #2E86C1;
+            background: linear-gradient(to right, #2E86C1, #85C1E9);
             color: white;
             font-weight: bold;
             text-align: center;
             padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 10px;
+            margin-bottom: 5px;
             cursor: pointer;
+            border-radius: 5px;
         """
     else:
         # النمط العادي
         style = """
-            background-color: #f0f2f6;
             color: black;
             text-align: center;
             padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 10px;
+            margin-bottom: 5px;
             cursor: pointer;
+            border-radius: 5px;
         """
 
-    # استخدام st.markdown لإنشاء عنصر HTML مع ارتباطه بتحديث الصفحة
+    # إنشاء عنصر HTML قابل للنقر
     nav_html = f"""
-    <div style="{style}" onclick="window.location.href = window.location.href.split('?')[0] + '?page={page_key}'">
-        {label}
-    </div>
+    <p style="{style}" onclick="location.href='/?page={page_key}'">{label}</p>
     """
+
     st.sidebar.markdown(nav_html, unsafe_allow_html=True)
 
 # عرض التنقل الجانبي
 st.sidebar.title("التنقل")
 
-# إنشاء عناصر التنقل
-nav_item("الصفحة الرئيسية", "home")
-nav_item("إدارة الحسابات", "manage_accounts")
-nav_item("إضافة حملة", "add_campaign")
-nav_item("عرض الحملات", "view_campaigns")
+# تعريف الصفحات
+pages = {
+    "الصفحة الرئيسية": "home",
+    "إدارة الحسابات": "manage_accounts",
+    "إضافة حملة": "add_campaign",
+    "عرض الحملات": "view_campaigns"
+}
 
-# ربط الصفحة المختارة بعرض المحتوى المناسب
+# قراءة المعلمة 'page' من عنوان URL
+query_params = st.experimental_get_query_params()
+if 'page' in query_params and query_params['page'][0] in pages.values():
+    st.session_state['page'] = query_params['page'][0]
+
+# عرض عناصر التنقل
+for label, page_key in pages.items():
+    nav_item(label, page_key)
+
+# عرض الصفحة المختارة
 if st.session_state['page'] == 'home':
     accueil_page()
 elif st.session_state['page'] == 'manage_accounts':
