@@ -14,7 +14,7 @@ def save_accounts(accounts):
         json.dump(accounts, f, ensure_ascii=False, indent=4)
 
 def manage_accounts_page():
-    st.header("إدارة الحسابات")
+    st.title("إدارة الحسابات")
 
     accounts = load_accounts()
 
@@ -47,4 +47,3 @@ def manage_accounts_page():
             accounts[selected_account]["date"] = str(updated_date)
             save_accounts(accounts)
             st.success(f"تم تعديل الحساب {selected_account} بنجاح!")
-
